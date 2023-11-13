@@ -1,12 +1,13 @@
 @extends('front.layouts.master')
-@section('title', 'Anasayfa')
+@section('title', 'Homepage')
 @section('content')
     <!-- Main Content-->
-    <div class="col-md-10 col-lg-8 col-xl-7">
+    <div class="col-md-12 col-lg-12 col-xl-12">
         @foreach ($articles as $article)
             <!-- Post preview-->
             <div class="post-preview">
                 <a href="{{ 'blog/' . $article->slug }}">
+                    <img src="{{ $article->image }}" alt="{{ $article->title }}" class="img-fluid">
                     <h2 class="post-title">{{ $article->title }}</h2>
                     <h3 class="post-subtitle">
                         {{ mb_strlen($article->content) > 100 ? mb_substr($article->content, 0, 100) . '...' : $article->content }}
@@ -24,6 +25,9 @@
                 <hr class="my-4" />
             @endif
         @endforeach
-        {{ $articles->links() }} <!-- Sayfalama için gerekli kod -->
+        <!-- Sayfalama için gerekli kod, bootstrap ile uyumlu, sayfanın tam ortasında görüntülenir -->
+        <div class="d-flex justify-content-center">
+            {{ $articles->links() }}
+        </div>
     </div>
 @endsection

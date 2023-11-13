@@ -5,7 +5,7 @@
 <footer class="sticky-footer bg-white">
     <div class="container my-auto">
         <div class="copyright text-center my-auto">
-            <span>Copyright &copy; Blog Admin {{ date('Y') }}</span>
+            <span>Copyright &copy; mhd {{ date('Y') }}</span>
         </div>
     </div>
 </footer>

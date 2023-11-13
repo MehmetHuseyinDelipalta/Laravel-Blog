@@ -28,7 +28,7 @@ class AuthController extends Controller
                     return redirect()->route('moderator.dashboard');
                 }
                 if (Auth::user()->role == 'user') {
-                    return redirect()->route('dashboard');
+                    return redirect()->route('homepage');
                 }
                 if (Auth::user()->role == 'creator') {
                     return redirect()->route('creator.dashboard');
@@ -67,7 +67,10 @@ class AuthController extends Controller
             'password' => bcrypt($request->password),
             'role' => 'user',
         ]);
-        return redirect()->route('dashboard')->with('success', 'You have been registered successfully!');
+        // Kullanıcıyı oturum açık olarak işaretle ve anasayfaya yönlendir
+        auth()->login($user, true);
+        toastr()->success('You have been registered successfully! ' . Auth::user()->name);
+        return redirect()->route('homepage');
     }
 
     public function logout()

@@ -1,4 +1,4 @@
-@extends('back.layouts.master')
+@extends('back.admin.layouts.master')
 @section('title', 'Article Create')
 @section('content')
     <!-- DataTales Example -->
@@ -14,7 +14,7 @@
                     @endforeach
                 </div>
             @endif
-            <form method="post" action="{{ route('article.store') }}" enctype="multipart/form-data">
+            <form method="post" action="{{ route('admin.article.store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
                     <label>Title</label>

@@ -29,7 +29,7 @@ class ArticleSeeder extends Seeder
                 'image' => "https://picsum.photos/640/480?random=" . mt_rand(1, 55000),
                 'content' => $faker->sentence(100),
                 'slug' => Str::slug($title),
-                'creator_id' => 1,
+                'creator_id' => mt_rand(1, 10),
                 'created_at' => $createdDate,
                 'updated_at' => $createdDate,
                 'publish_date' => $createdDate,

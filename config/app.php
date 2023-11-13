@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => (bool) env('APP_DEBUG', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -164,6 +164,7 @@ return [
 
         //Third Party Packages
         Yoeunes\Toastr\ToastrServiceProvider::class,
+        Laravel\Passport\PassportServiceProvider::class,
 
 
         /*

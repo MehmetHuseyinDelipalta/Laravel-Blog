@@ -1,4 +1,4 @@
-@extends('back.layouts.master')
+@extends('back.admin.layouts.master')
 @section('title', 'Article Edit')
 @section('content')
     <!-- DataTales Example -->
@@ -14,7 +14,7 @@
                     @endforeach
                 </div>
             @endif
-            <form method="post" action="{{ route('article.update', $article->id) }}" enctype="multipart/form-data">
+            <form method="post" action="{{ route('admin.article.update', $article->id) }}" enctype="multipart/form-data">
                 @method('PUT')
                 @csrf
                 <div class="form-group">
@@ -61,7 +61,6 @@
 @endsection
 @section('js')
     <!-- include summernote css/js -->
-
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     <script>
         $(document).ready(function() {

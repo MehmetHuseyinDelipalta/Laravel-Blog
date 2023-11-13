@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Back;
+namespace App\Http\Controllers\Back\Creator;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -18,8 +18,8 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::orderBy('created_at', 'desc')->get();
-        return view("back.articles.index", compact('articles'));
+        $articles = Article::where('creator_id', auth()->user()->id)->orderBy('created_at', 'desc')->get();
+        return view("back.creator.articles.index", compact('articles'));
     }
 
     /**
@@ -29,7 +29,7 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        return view("back.articles.create");
+        return view("back.creator.articles.create");
     }
 
     /**
@@ -56,13 +56,13 @@ class ArticleController extends Controller
         $article->creator_id = auth()->user()->id;
 
         if ($request->hasFile('image')) {
-            $imageName = $strTitle . '.' . $request->image->getClientOriginalExtension();
+            $imageName = $strTitle . Str::random(16) . '.' . $request->image->getClientOriginalExtension();
             $request->image->move(public_path('uploads'), $imageName);
             $article->image = 'uploads/' . $imageName;
         }
         $article->save();
         toastr()->success('Success', 'Article Created Successfully');
-        return redirect()->route('article.index');
+        return redirect()->route('creator.article.index');
     }
 
     /**
@@ -84,10 +84,8 @@ class ArticleController extends Controller
      */
     public function edit($id)
     {
-        //edit işlemi için önce veri tabanından ilgili kaydı bulup değişkene atıyoruz
-        $article = Article::findOrFail($id);
-        //daha sonra bu değişkeni edit.blade.php ye gönderiyoruz
-        return view("back.articles.edit", compact('article'));
+        $article = Article::where('id', $id)->where('creator_id', auth()->user()->id)->firstOrFail();
+        return view("back.creator.articles.edit", compact('article'));
     }
 
     /**
@@ -115,13 +113,13 @@ class ArticleController extends Controller
         $article->creator_id = auth()->user()->id;
 
         if ($request->hasFile('image')) {
-            $imageName = $strTitle . '.' . $request->image->getClientOriginalExtension();
+            $imageName = $strTitle . Str::random(16) . '.' . $request->image->getClientOriginalExtension();
             $request->image->move(public_path('uploads'), $imageName);
             $article->image = 'uploads/' . $imageName;
         }
         $article->save();
         toastr()->success('Success', 'Article Updated Successfully');
-        return redirect()->route('article.index');
+        return redirect()->route('creator.article.index');
     }
 
     /**
@@ -137,34 +135,35 @@ class ArticleController extends Controller
 
     public function delete($id)
     {
-        Article::find($id)->delete();
+        Article::where('id', $id)->where('creator_id', auth()->user()->id)->delete();
         toastr()->success('Success', 'Article Deleted Successfully');
-        return redirect()->route('article.index');
+        return redirect()->route('creator.article.index');
     }
 
     public function trash()
     {
-        $articles = Article::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
-        return view("back.articles.trash", compact('articles'));
+        $articles = Article::onlyTrashed()->where('creator_id', auth()->user()->id)->orderBy('deleted_at', 'desc')->get();
+        return view("back.creator.articles.trash", compact('articles'));
     }
 
     public function recover($id)
     {
-        Article::onlyTrashed()->find($id)->restore();
+        Article::onlyTrashed()->where('id', $id)->where('creator_id', auth()->user()->id)->firstOrFail()->restore();
         toastr()->success('Success', 'Article Restored Successfully');
-        return redirect()->route('article.index');
+        return redirect()->route('creator.article.index');
     }
 
 
 
     public function forceDelete($id)
     {
-        $article = Article::onlyTrashed()->find($id);
+        //sadece o creatorun makalesini hard delete edebilir
+        $article = Article::onlyTrashed()->where('id', $id)->where('creator_id', auth()->user()->id)->firstOrFail();
         if (File::exists($article->image)) {
             File::delete(public_path($article->image));
         }
-        Article::onlyTrashed()->find($id)->forceDelete();
+        Article::onlyTrashed()->where('id', $id)->where('creator_id', auth()->user()->id)->firstOrFail()->forceDelete();
         toastr()->success('Success', 'Article Hard Deleted Successfully');
-        return redirect()->route('article.index');
+        return redirect()->route('creator.article.index');
     }
 }
